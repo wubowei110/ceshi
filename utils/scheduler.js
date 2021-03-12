@@ -70,7 +70,7 @@ let scheduler = {
             let options = tasks[taskName].options || {}
             let willTime = moment(randomDate(options));
             // 任务的随机延迟时间
-            let waitTime = options.dev ? 0 : Math.floor(Math.random() * (options.waitTime || 300))
+            let waitTime = options.dev ? 0 : Math.floor(Math.random() * (options.waitTime || 40))
             if (options) {
                 if (options.isCircle || options.dev) {
                     willTime = moment().startOf('days');
@@ -294,7 +294,7 @@ let scheduler = {
             // 多个任务同时执行会导致日志记录类型错误，所以仅在tryRun模式开启多个任务并发执行
             let concurrency = scheduler.isTryRun ? 10 : 10
             let queue = new PQueue({ concurrency });
-            console.info('调度任务中', '并发数', concurrency)
+            console.info('调度任务中', '并发数', 3)
             for (let task of will_tasks) {
                 scheduler.updateTaskFile(task, {
                     // 限制执行时长2hours，runStopTime用于防止因意外原因导致isRunning=true的任务被中断，而未改变状态使得无法再次执行的问题
@@ -307,7 +307,7 @@ let scheduler = {
                     try {
                         if (task.waitTime) {
                             console.info('延迟执行', task.taskName, 20, 'seconds')
-                            await new Promise((resolve, reject) => setTimeout(resolve, 20000))
+                            await new Promise((resolve, reject) => setTimeout(resolve, 100))
                         }
 
                         let ttt = tasks[task.taskName]
